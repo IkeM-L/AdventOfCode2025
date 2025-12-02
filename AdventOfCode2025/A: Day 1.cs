@@ -2,10 +2,11 @@ namespace AdventOfCode2025;
 
 public class Day1
 {
+    private const bool Log = false;
     public static int GetNumZeros(string input, bool countAllZeros)
     {
         var turns = input.Split('\n');
-        var dial = new Dial(99, countAllZeros, true);
+        var dial = new Dial(99, countAllZeros, Log);
         foreach (var turn in turns)
         {
             if(turn == "")

@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 1;
+const int day = 2;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -10,6 +10,9 @@ switch (day)
 {
     case 1:
         Console.WriteLine(Day1.GetNumZeros(input, (part == PuzzlePart.Two ? true : false)));
+        break;
+    case 2:
+        Console.WriteLine(Day2.GetSumRepeats(input, part == PuzzlePart.One));
         break;
     default:
         break;
