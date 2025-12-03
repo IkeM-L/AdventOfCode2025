@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 2;
+const int day = 3;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -13,6 +13,9 @@ switch (day)
         break;
     case 2:
         Console.WriteLine(Day2.GetSumRepeats(input, part == PuzzlePart.One));
+        break;
+    case 3:
+        Console.WriteLine(Day3.FindTotalJoltage(input, part == PuzzlePart.One));
         break;
     default:
         break;
