@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 4;
+const int day = 5;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -19,6 +19,9 @@ switch (day)
         break;
     case 4:
         Console.WriteLine(Day4.FindTotalRolls(input, part == PuzzlePart.One));
+        break;
+    case 5:
+        Console.WriteLine(Day5.CountNumFreshIngredients(input, part == PuzzlePart.One));
         break;
     default:
         break;
