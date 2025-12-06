@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 5;
+const int day = 6;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -22,6 +22,10 @@ switch (day)
         break;
     case 5:
         Console.WriteLine(Day5.CountNumFreshIngredients(input, part == PuzzlePart.One));
+        break;
+    case 6:
+        Console.WriteLine(part == PuzzlePart.One ? Day6.GetGrandSum(input) : Day6.GetGrandColumnSum(input));
+
         break;
     default:
         break;

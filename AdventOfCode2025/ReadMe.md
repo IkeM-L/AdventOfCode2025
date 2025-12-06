@@ -7,3 +7,5 @@ Input validation intentionally excluded due to the nature of the code's "run onc
 Files are named to display in order when alphabetical
 
 Example inputs are provided, actual inputs are not
+
+We assume running in a Linux environment
