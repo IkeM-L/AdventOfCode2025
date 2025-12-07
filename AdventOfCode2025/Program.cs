@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 6;
+const int day = 7;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -25,7 +25,9 @@ switch (day)
         break;
     case 6:
         Console.WriteLine(part == PuzzlePart.One ? Day6.GetGrandSum(input) : Day6.GetGrandColumnSum(input));
-
+        break;
+    case 7:
+        Console.WriteLine(part == PuzzlePart.One ? Day7.GetNumSplits(input) : Day7.GetNumTimelines(input));
         break;
     default:
         break;
