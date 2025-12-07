@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="Day1Example.txt">
+        <DependentUpon>A: Day 1.cs</DependentUpon>
+      </None>
+      <None Update="Day1.txt">
+        <DependentUpon>A: Day 1.cs</DependentUpon>
+      </None>
+      <None Update="Day2Example.txt">
+        <DependentUpon>B: Day 2.cs</DependentUpon>
+      </None>
+      <None Update="Day2.txt">
+        <DependentUpon>B: Day 2.cs</DependentUpon>
+      </None>
+      <None Update="Day3Example.txt">
+        <DependentUpon>C: Day 3.cs</DependentUpon>
+      </None>
+      <None Update="Day3.txt">
+        <DependentUpon>C: Day 3.cs</DependentUpon>
+      </None>
+      <None Update="Day4Example.txt">
+        <DependentUpon>D: Day 4.cs</DependentUpon>
+      </None>
+      <None Update="Day4.txt">
+        <DependentUpon>D: Day 4.cs</DependentUpon>
+      </None>
+      <None Update="Day5Example.txt">
+        <DependentUpon>E: Day 5.cs</DependentUpon>
+      </None>
+      <None Update="Day5.txt">
+        <DependentUpon>E: Day 5.cs</DependentUpon>
+      </None>
+      <None Update="Day6Example.txt">
+        <DependentUpon>F: Day 6.cs</DependentUpon>
+      </None>
+      <None Update="Day6.txt">
+        <DependentUpon>F: Day 6.cs</DependentUpon>
+      </None>
+      <None Update="Day7Example.txt">
+        <DependentUpon>G: Day 7.cs</DependentUpon>
+      </None>
+      <None Update="Day7.txt">
+        <DependentUpon>G: Day 7.cs</DependentUpon>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Utils.cs">
+        <DependentUpon>Program.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
