@@ -2,9 +2,9 @@ namespace AdventOfCode2025;
 
 public class Day8
 {
-    private const bool Log = true;
+    private const bool Log = false;
     
-    public static long GetProductLargestCircuits(string input, int numToConnect)
+    public static long Solve(string input, int numToConnect, bool isPartOne)
     {
         var lines = input
             .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
@@ -34,35 +34,56 @@ public class Day8
         // Build connected components from the closest pairs
         var collections = junctionNodes.BuildComponentsFromNClosestPairs(numToConnect);
 
-        var largest = collections
-            .OrderByDescending(x => x.Count)
-            .Take(3)
-            .ToList();
-
-        if (Log)
+        if (isPartOne)
         {
-            foreach (var set in largest)
+            var largest = collections
+                .OrderByDescending(x => x.Count)
+                .Take(3)
+                .ToList();
+
+            if (Log)
             {
-                Console.WriteLine(set.Count);
+                foreach (var set in largest)
+                {
+                    Console.WriteLine(set.Count);
+                }
+            }
+            
+            return largest.Aggregate(1L, (current, set) => current * set.Count);
+        }
+        
+        var output = (collections: collections, mostRecentlyAdded: (Node?)null, mostRecentlyConnectedTo: (Node?)null);
+
+        // We assume we don't already have one component after part 1 due to the puzzle setup
+        // If we do, this will be incorrect. Easy fix (just don't re-run part 1 code and start from empty) but 
+        // this gets the correct answer faster 
+        // We could also have done a binary search or something, I'd need to benchmark to see what is faster and am too busy today
+        while (output.collections.Count != 1)
+        {
+            output = junctionNodes.AddNextNodeToComponents();
+            if (Log)
+            {
+                Console.WriteLine(
+                    $"Collection count: {output.collections.Count} " +
+                    $"Nodes: {output.mostRecentlyAdded}:{output.mostRecentlyConnectedTo}");
             }
         }
 
-        return largest.Aggregate<HashSet<Node>?, long>(1, (current, set) => current * set.Count);
+        if (output.mostRecentlyAdded is null || output.mostRecentlyConnectedTo is null)
+            throw new InvalidOperationException("No final edge to compute product from.");
+
+        return output.mostRecentlyAdded.X * output.mostRecentlyConnectedTo.X;
     }
 }
 
-public class Node : IEquatable<Node>
+public class Node(int x, int y, int z) : IEquatable<Node>
 {
-    private readonly int _x;
-    private readonly int _y;
-    private readonly int _z;
+    private readonly int _x = x;
+    private readonly int _y = y;
+    private readonly int _z = z;
 
-    public Node(int x, int y, int z)
-    {
-        _x = x;
-        _y = y;
-        _z = z;
-    }
+    // Expose X as read-only and backed by _x, so the final product is meaningful
+    public long X => _x;
 
     public float DistanceTo(Node other)
     {
@@ -89,18 +110,14 @@ public class Node : IEquatable<Node>
     public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 }
 
-public class JunctionNodes
+public class JunctionNodes(IEnumerable<Node> nodes)
 {
-    private readonly List<Node> _nodes;
+    private readonly List<Node> _nodes = nodes.ToList();
     private List<(float dist, Node a, Node b)>? _pairs;
+
     // Undirected adjacency list
     private readonly Dictionary<Node, HashSet<Node>> _adj = new();
     private int _adjInitilisedUpTo;
-
-    public JunctionNodes(IEnumerable<Node> nodes)
-    {
-        _nodes = nodes.ToList();
-    }
 
     /// <summary>
     /// Ensure _pairs is populated and sorted by distance ascending.
@@ -119,7 +136,7 @@ public class JunctionNodes
             {
                 var a = _nodes[i];
                 var b = _nodes[j];
-                float dist = a.DistanceTo(b);
+                var dist = a.DistanceTo(b);
                 _pairs.Add((dist, a, b));
             }
         }
@@ -161,23 +178,48 @@ public class JunctionNodes
         return ComputeComponents();
     }
 
-    public List<HashSet<Node>> AddNextNodeToComponents()
+    public (List<HashSet<Node>> collections, Node? mostRecentlyAdded, Node? mostRecentlyConnectedTo) AddNextNodeToComponents()
     {
         EnsurePairs();
 
         // No more pairs to add: just return the components of the current graph
         if (_adjInitilisedUpTo >= _pairs!.Count)
         {
-            return ComputeComponents();
+            return (ComputeComponents(), null, null);
         }
 
-        // Add exactly the next closest pair
         var (_, a, b) = _pairs[_adjInitilisedUpTo];
+
+        // Capture membership before adding the edge so we know which node is "new"
+        var aExisted = _adj.ContainsKey(a);
+        var bExisted = _adj.ContainsKey(b);
+
         AddEdge(a, b);
         AddEdge(b, a);
         _adjInitilisedUpTo++;
 
-        return ComputeComponents();
+        Node? mostRecentlyAdded;
+        Node? mostRecentlyConnectedTo;
+
+        switch (aExisted)
+        {
+            case true when !bExisted:
+                mostRecentlyAdded = b;
+                mostRecentlyConnectedTo = a;
+                break;
+            case false when bExisted:
+                mostRecentlyAdded = a;
+                mostRecentlyConnectedTo = b;
+                break;
+            default:
+                // Either both existed already or both are new and form a new component.
+                // In either case, just return the pair in a stable order.
+                mostRecentlyAdded = a;
+                mostRecentlyConnectedTo = b;
+                break;
+        }
+
+        return (ComputeComponents(), mostRecentlyAdded, mostRecentlyConnectedTo);
     }
 
     private void AddEdge(Node u, Node v)
@@ -196,7 +238,15 @@ public class JunctionNodes
         var components = new List<HashSet<Node>>();
         var visited = new HashSet<Node>();
 
-        foreach (var start in _adj.Keys)
+        // Ensure every node is represented in the adjacency map
+        foreach (var node in _nodes)
+        {
+            if (!_adj.ContainsKey(node))
+                _adj[node] = new HashSet<Node>();
+        }
+
+        // Run DFS/BFS over all nodes, not just those with edges
+        foreach (var start in _nodes)
         {
             if (!visited.Add(start))
                 continue;
@@ -211,10 +261,9 @@ public class JunctionNodes
                 if (!comp.Add(node))
                     continue;
 
-                foreach (var neigh in _adj[node])
+                foreach (Node? neigh in _adj[node].Where(neigh => visited.Add(neigh)))
                 {
-                    if (visited.Add(neigh))
-                        stack.Push(neigh);
+                    stack.Push(neigh);
                 }
             }
 
