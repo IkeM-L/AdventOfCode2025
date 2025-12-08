@@ -50,6 +50,12 @@
       <None Update="Day7.txt">
         <DependentUpon>G: Day 7.cs</DependentUpon>
       </None>
+      <None Update="Day8Example.txt">
+        <DependentUpon>H: Day 8.cs</DependentUpon>
+      </None>
+      <None Update="Day8.txt">
+        <DependentUpon>H: Day 8.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

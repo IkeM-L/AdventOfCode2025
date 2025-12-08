@@ -1,8 +1,8 @@
 ﻿using AdventOfCode2025;
 
-const int day = 7;
-const PuzzleInput inputType = PuzzleInput.Actual;
-const PuzzlePart part = PuzzlePart.Two;
+const int day = 8;
+const PuzzleInput inputType = PuzzleInput.Example;
+const PuzzlePart part = PuzzlePart.One;
 
 var input = GetInputFromFile(day, inputType);
 
@@ -28,6 +28,9 @@ switch (day)
         break;
     case 7:
         Console.WriteLine(part == PuzzlePart.One ? Day7.GetNumSplits(input) : Day7.GetNumTimelines(input));
+        break;
+    case 8:
+        Console.WriteLine(Day8.GetProductLargestCircuits(input, (inputType == PuzzleInput.Actual ? 1000 : 10)));
         break;
     default:
         break;
