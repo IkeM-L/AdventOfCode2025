@@ -33,7 +33,7 @@ switch (day)
         Console.WriteLine(Day8.Solve(input, (inputType == PuzzleInput.Actual ? 1000 : 10), part == PuzzlePart.One));
         break;
     case 9:
-        Console.WriteLine(Day9.LargestRectangle(input));
+        Console.WriteLine(Day9.LargestRectangle(input, part == PuzzlePart.One));
         break;
     default:
         break;
