@@ -81,8 +81,7 @@ public class Node(int x, int y, int z) : IEquatable<Node>
     private readonly int _x = x;
     private readonly int _y = y;
     private readonly int _z = z;
-
-    // Expose X as read-only and backed by _x, so the final product is meaningful
+    
     public long X => _x;
 
     public float DistanceTo(Node other)

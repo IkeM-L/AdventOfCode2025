@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 8;
+const int day = 9;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -31,6 +31,9 @@ switch (day)
         break;
     case 8:
         Console.WriteLine(Day8.Solve(input, (inputType == PuzzleInput.Actual ? 1000 : 10), part == PuzzlePart.One));
+        break;
+    case 9:
+        Console.WriteLine(Day9.LargestRectangle(input));
         break;
     default:
         break;
