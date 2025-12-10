@@ -1,6 +1,6 @@
 ﻿using AdventOfCode2025;
 
-const int day = 9;
+const int day = 10;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
@@ -34,6 +34,9 @@ switch (day)
         break;
     case 9:
         Console.WriteLine(Day9.LargestRectangle(input, part == PuzzlePart.One));
+        break;
+    case 10:
+        Console.WriteLine(Day10.GetMinimumNumPresses(input, part == PuzzlePart.One));
         break;
     default:
         break;

@@ -6,8 +6,7 @@ public class Day8
     
     public static long Solve(string input, int numToConnect, bool isPartOne)
     {
-        var lines = input
-            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
         List<Node> nodes = new();
         foreach (var line in lines)
