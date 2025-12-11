@@ -74,6 +74,9 @@
       <None Update="Day11.txt">
         <DependentUpon>K: Day 11.cs</DependentUpon>
       </None>
+      <None Update="Day11ExamplePart2.txt">
+        <DependentUpon>K: Day 11.cs</DependentUpon>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

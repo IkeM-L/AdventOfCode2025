@@ -2,22 +2,72 @@ namespace AdventOfCode2025;
 
 public class Day11
 {
-    public static long GetNumPaths(string input)
-    {
-        // Get adjacency matrix and name->index map
-        var (adjMatrix, indexByVertex) = ToAdjMatrix(input);
+    private static Dictionary<string, int>? _indexByVertex = null;
+    private static int[][]? _adjMatrix = null;
+    private const bool Log = true;
 
-        if (!indexByVertex.TryGetValue("you", out var youIndex) ||
-            !indexByVertex.TryGetValue("out", out var outIndex))
+    public static long GetNumPaths(string input, bool isPart1)
+    {
+        if (isPart1)
+        {
+            return NumPaths(input, "you", "out");
+        }
+        else
+        {
+            var svrToDac = NumPaths(input, "svr", "dac");
+            if (Log) Console.WriteLine($"svr -> dac: {svrToDac}");
+
+            var svrToFft = NumPaths(input, "svr", "fft");
+            if (Log) Console.WriteLine($"svr -> fft: {svrToFft}");
+
+            var fftToDac = NumPaths(input, "fft", "dac");
+            if (Log) Console.WriteLine($"fft -> dac: {fftToDac}");
+
+            var dacToFft = NumPaths(input, "dac", "fft");
+            if (Log) Console.WriteLine($"dac -> fft: {dacToFft}");
+
+            var fftToOut = NumPaths(input, "fft", "out");
+            if (Log) Console.WriteLine($"fft -> out: {fftToOut}");
+
+            var dacToOut = NumPaths(input, "dac", "out");
+            if (Log) Console.WriteLine($"dac -> out: {dacToOut}");
+
+            var term1 = svrToDac * dacToFft * fftToOut; // svr -> dac -> fft -> out
+            if (Log) Console.WriteLine($"term1 (svr->dac->fft->out): {term1}");
+
+            var term2 = svrToFft * fftToDac * dacToOut; // svr -> fft -> dac -> out
+            if (Log) Console.WriteLine($"term2 (svr->fft->dac->out): {term2}");
+
+            var total = term1 + term2;
+            if (Log) Console.WriteLine($"total paths svr->out via dac & fft: {total}");
+
+            return total;
+        }
+
+        
+    }
+
+    private static long NumPaths(string input, string start, string end)
+    {
+        if(_adjMatrix is null || _indexByVertex is null)
+        {
+            // Get adjacency matrix and name->index map
+            var (adjMatrix, indexByVertex) = To_adjMatrix(input);
+            _adjMatrix = adjMatrix;
+            _indexByVertex = indexByVertex;
+        }
+
+        if (!_indexByVertex.TryGetValue(start, out var youIndex) ||
+            !_indexByVertex.TryGetValue(end, out var outIndex))
             return 0; // or throw, depending on what you want
 
-        var n = adjMatrix.Length;
+        var n = _adjMatrix.Length;
 
         // Convert int[][] -> long[,]
         var A = new long[n, n];
         for (var i = 0; i < n; i++)
         {
-            var row = adjMatrix[i];
+            var row = _adjMatrix[i];
             for (var j = 0; j < n; j++)
                 A[i, j] = row[j];
         }
@@ -37,7 +87,7 @@ public class Day11
         return total;
     }
 
-    private static (int[][] adjMatrix, Dictionary<string, int> indexByVertex) ToAdjMatrix(string input)
+    private static (int[][] _adjMatrix, Dictionary<string, int> _indexByVertex) To_adjMatrix(string input)
     {
         // Split into non-empty lines
         var lines = input.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
@@ -65,14 +115,14 @@ public class Day11
         var vertexList = vertices.OrderBy(v => v).ToArray();
 
         // Map vertex name -> index
-        var indexByVertex = new Dictionary<string, int>(vertexList.Length);
+        var _indexByVertex = new Dictionary<string, int>(vertexList.Length);
         for (var i = 0; i < vertexList.Length; i++)
-            indexByVertex[vertexList[i]] = i;
+            _indexByVertex[vertexList[i]] = i;
 
         var n = vertexList.Length;
-        var adjMatrix = new int[n][];
+        var _adjMatrix = new int[n][];
         for (var i = 0; i < n; i++)
-            adjMatrix[i] = new int[n];
+            _adjMatrix[i] = new int[n];
 
         // Fill matrix
         foreach (var line in lines)
@@ -81,20 +131,20 @@ public class Day11
             if (parts.Length != 2) continue;
 
             var from = parts[0];
-            if (!indexByVertex.TryGetValue(from, out var row))
+            if (!_indexByVertex.TryGetValue(from, out var row))
                 continue;
 
             var targets = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries);
             foreach (var t in targets)
             {
-                if (!indexByVertex.TryGetValue(t, out var col))
+                if (!_indexByVertex.TryGetValue(t, out var col))
                     continue;
 
-                adjMatrix[row][col] = 1;
+                _adjMatrix[row][col] = 1;
             }
         }
 
-        return (adjMatrix, indexByVertex);
+        return (_adjMatrix, _indexByVertex);
     }
 }
 

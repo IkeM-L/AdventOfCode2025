@@ -4,7 +4,7 @@ const int day = 11;
 const PuzzleInput inputType = PuzzleInput.Actual;
 const PuzzlePart part = PuzzlePart.Two;
 
-var input = GetInputFromFile(day, inputType);
+var input = GetInputFromFile(day, inputType, part);
 
 switch (day)
 {
@@ -39,15 +39,19 @@ switch (day)
         Console.WriteLine(Day10.GetMinimumNumPresses(input, part == PuzzlePart.One));
         break;
     case 11:
-        Console.WriteLine(Day11.GetNumPaths(input));
+        Console.WriteLine(Day11.GetNumPaths(input, part == PuzzlePart.One));
         break;
     default:
         break;
 }
 
 
-string GetInputFromFile(int i, PuzzleInput puzzleInput)
+string GetInputFromFile(int i, PuzzleInput puzzleInput, PuzzlePart puzzlePart)
 {
-    string path = $"../../../Day{i}{(puzzleInput == PuzzleInput.Example? "Example" : "") }.txt";
+    string path = $"../../../Day{i}{(puzzleInput == PuzzleInput.Example? "Example" : "")}{(part == PuzzlePart.One ? "" : "Part2")}.txt";
+    if (File.Exists(path))
+        return File.ReadAllText(path);
+    
+    path = $"../../../Day{i}{(puzzleInput == PuzzleInput.Example? "Example" : "") }.txt";
     return File.ReadAllText(path);
 }
