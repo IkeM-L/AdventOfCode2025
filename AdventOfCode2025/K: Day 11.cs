@@ -2,7 +2,7 @@ namespace AdventOfCode2025;
 
 public class Day11
 {
-    private const bool Log = true;
+    private const bool Log = false;
 
     public static long GetNumPaths(string input, bool isPart1)
     {
